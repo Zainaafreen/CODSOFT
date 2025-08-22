@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spice Palace - Authentic Indian Cuisine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+            min-height: 100vh;
+            color: #374151;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #d1d5db;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(45deg, #6b7280, #9ca3af);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.125rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .logo-text p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .cart-btn {
+            background: linear-gradient(45deg, #6b7280, #9ca3af);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 2rem 1rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Search and Filters */
+        .search-section {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background: #f9fafb;
+            color: #374151;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #374151;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #6b7280;
+            color: white;
+            border-color: #6b7280;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.25rem;
+            background: #e5e7eb;
+            padding: 0.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #6b7280;
+        }
+
+        .category-tab.active {
+            background: #6b7280;
+            color: white;
+        }
+
+        /* Menu Items */
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #9ca3af;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1f2937;
+        }
+
+        .item-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        .ingredients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ingredient-tag {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+        }
+
+        .allergens {
+            font-size: 0.75rem;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(45deg, #6b7280, #9ca3af);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+
+        .favorite-btn.active {
+            color: #dc2626;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 2rem 0;
+            color: #9ca3af;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: #ffffff;
+        }
+
+        .cart-item-info p {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #4b5563;
+            background: #2d2d2d;
+            color: #ffffff;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .cart-total {
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            margin-top: 1rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .total-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #4b5563, #374151);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(75, 85, 99, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #000000;
+            color: white;
+            margin-top: 4rem;
+            padding: 3rem 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+        }
+
+        .footer-section p, .footer-section div {
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #9ca3af;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .search-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .category-tabs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cart-sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-badge">
+                        🍛 Spice Palace
+                    </div>
+                    <div class="logo-text">
+                        <h1>Authentic Indian Cuisine</h1>
+                        <p>Traditional Flavors & Modern Presentation</p>
+                    </div>
+                </div>
+                
+                <button class="cart-btn" onclick="toggleCart()">
+                    🛒 Cart (<span id="cart-count">0</span>)
+                    <span id="cart-badge" class="cart-badge hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <div class="menu-grid">
+                <!-- Menu Section -->
+                <div class="menu-section">
+                    <!-- Search and Filters -->
+                    <div class="search-section">
+                        <div class="search-controls">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" 
+                                       class="search-input" 
+                                       placeholder="Search dishes, ingredients..."
+                                       id="search-input"
+                                       oninput="filterItems()">
+                            </div>
+                            
+                            <button class="filter-btn" id="vegetarian-filter" onclick="toggleFilter('vegetarian')">
+                                🌱 Vegetarian
+                            </button>
+                            <button class="filter-btn" id="vegan-filter" onclick="toggleFilter('vegan')">
+                                🌿 Vegan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category Tabs -->
+                    <div class="category-tabs">
+                        <button class="category-tab active" onclick="showCategory('appetizers')">
+                            🍽️ <span>Appetizers</span>
+                        </button>
+                        <button class="category-tab" onclick="showCategory('mains')">
+                            💰 <span>Main Courses</span>
+                        </button>
+                        <button class="category-tab" onclick="showCategory('desserts')">
+                            🧁 <span>Desserts</span>
+                        </button>
+                        <button class="category-tab" onclick="showCategory('beverages')">
+                            ☕ <span>Beverages</span>
+                        </button>
+                    </div>
+
+                    <!-- Menu Items -->
+                    <div class="menu-items" id="menu-items">
+                        <!-- Items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Cart Sidebar -->
+                <div class="cart-sidebar" id="cart-sidebar">
+                    <div class="cart-header">
+                        🛒 Your Order
+                    </div>
+                    <div id="cart-content">
+                        <div class="cart-empty">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛒</div>
+                            <p>Your cart is empty</p>
+                            <p style="font-size: 0.875rem;">Add some delicious items!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🍛 Spice Palace</h3>
+                    <p>Experience authentic Indian flavors crafted with traditional spices and modern presentation in a warm, welcoming atmosphere.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Hours</h3>
+                    <div>
+                        <p>Monday - Thursday: 11:00 AM - 9:30 PM</p>
+                        <p>Friday - Saturday: 11:00 AM - 10:30 PM</p>
+                        <p>Sunday: 12:00 PM - 9:00 PM</p>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div>
+                        <p>📍 456 Spice Market Lane, Little India</p>
+                        <p>📞 (555) SPICE-99</p>
+                        <p>✉️ namaste@spicepalace.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Spice Palace Restaurant. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu Data
+        const menuData = [
+            // Appetizers
+            {
+                id: '1',
+                name: 'Samosa Chaat',
+                description: 'Crispy samosas topped with yogurt, tamarind chutney, and spiced chickpeas',
+                price: 8.99,
+                category: 'appetizers',
+                isVegetarian: true,
+                isSpicy: true,
+                rating: 4.8,
+                prepTime: 15,
+                ingredients: ['Samosa', 'Yogurt', 'Tamarind chutney', 'Chickpeas', 'Mint chutney'],
+                allergens: ['Gluten', 'Dairy']
+            },
+            {
+                id: '2',
+                name: 'Tandoori Chicken Wings',
+                description: 'Marinated chicken wings cooked in tandoor with aromatic spices',
+                price: 12.99,
+                category: 'appetizers',
+                isSpicy: true,
+                rating: 4.9,
+                prepTime: 20,
+                ingredients: ['Chicken wings', 'Yogurt', 'Tandoori masala', 'Ginger-garlic paste'],
+                allergens: ['Dairy']
+            },
+            {
+                id: '3',
+                name: 'Paneer Tikka',
+                description: 'Marinated cottage cheese cubes grilled with bell peppers and onions',
+                price: 10.99,
+                category: 'appetizers',
+                isVegetarian: true,
+                rating: 4.7,
+                prepTime: 18,
+                ingredients: ['Paneer', 'Bell peppers', 'Onions', 'Mint chutney', 'Spices'],
+                allergens: ['Dairy']
+            },
+            // Main Courses
+            {
+                id: '4',
+                name: 'Butter Chicken',
+                description: 'Tender chicken in rich tomato-based creamy sauce with aromatic spices',
+                price: 16.99,
+                category: 'mains',
+                rating: 4.9,
+                prepTime: 25,
+                ingredients: ['Chicken', 'Tomatoes', 'Cream', 'Butter', 'Garam masala'],
+                allergens: ['Dairy']
+            },
+            {
+                id: '5',
+                name: 'Lamb Biryani',
+                description: 'Fragrant basmati rice layered with tender lamb and saffron',
+                price: 18.99,
+                category: 'mains',
+                rating: 4.8,
+                prepTime: 35,
+                ingredients: ['Basmati rice', 'Lamb', 'Saffron', 'Fried onions', 'Mint'],
+                allergens: ['Dairy']
+            },
+            {
+                id: '6',
+                name: 'Dal Makhani',
+                description: 'Creamy black lentils slow-cooked with butter and aromatic spices',
+                price: 13.99,
+                category: 'mains',
+                isVegetarian: true,
+                rating: 4.6,
+                prepTime: 30,
+                ingredients: ['Black lentils', 'Butter', 'Cream', 'Tomatoes', 'Spices'],
+                allergens: ['Dairy']
+            },
+            // Desserts
+            {
+                id: '7',
+                name: 'Gulab Jamun',
+                description: 'Soft milk dumplings in cardamom-flavored sugar syrup',
+                price: 6.99,
+                category: 'desserts',
+                isVegetarian: true,
+                rating: 4.9,
+                prepTime: 5,
+                ingredients: ['Milk powder', 'Sugar syrup', 'Cardamom', 'Rose water'],
+                allergens: ['Dairy', 'Gluten']
+            },
+            {
+                id: '8',
+                name: 'Kulfi Falooda',
+                description: 'Traditional Indian ice cream with vermicelli, basil seeds, and rose syrup',
+                price: 7.99,
+                category: 'desserts',
+                isVegetarian: true,
+                rating: 4.7,
+                prepTime: 8,
+                ingredients: ['Kulfi', 'Vermicelli', 'Basil seeds', 'Rose syrup', 'Pistachios'],
+                allergens: ['Dairy', 'Nuts']
+            },
+            {
+                id: '9',
+                name: 'Ras Malai',
+                description: 'Soft cheese dumplings in cardamom-flavored sweetened milk',
+                price: 8.99,
+                category: 'desserts',
+                isVegetarian: true,
+                rating: 4.5,
+                prepTime: 10,
+                ingredients: ['Paneer', 'Milk', 'Sugar', 'Cardamom', 'Pistachios'],
+                allergens: ['Dairy', 'Nuts']
+            },
+            // Beverages
+            {
+                id: '10',
+                name: 'Mango Lassi',
+                description: 'Traditional yogurt-based drink blended with fresh mango pulp',
+                price: 4.99,
+                category: 'beverages',
+                isVegetarian: true,
+                rating: 4.8,
+                prepTime: 5,
+                ingredients: ['Yogurt', 'Mango pulp', 'Sugar', 'Cardamom'],
+                allergens: ['Dairy']
+            },
+            {
+                id: '11',
+                name: 'Masala Chai',
+                description: 'Aromatic spiced tea brewed with milk and traditional Indian spices',
+                price: 3.99,
+                category: 'beverages',
+                isVegetarian: true,
+                rating: 4.7,
+                prepTime: 8,
+                ingredients: ['Black tea', 'Milk', 'Cardamom', 'Ginger', 'Cinnamon'],
+                allergens: ['Dairy']
+            },
+            {
+                id: '12',
+                name: 'Fresh Lime Soda',
+                description: 'Refreshing lime juice with soda water and black salt',
+                price: 3.49,
+                category: 'beverages',
+                isVegan: true,
+                isVegetarian: true,
+                rating: 4.6,
+                prepTime: 3,
+                ingredients: ['Fresh lime', 'Soda water', 'Black salt', 'Mint'],
+                allergens: []
+            }
+        ];
+
+        // Global state
+        let currentCategory = 'appetizers';
+        let cart = [];
+        let favorites = [];
+        let filters = {
+            vegetarian: false,
+            vegan: false
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            displayMenuItems();
+            updateCartDisplay();
+        });
+
+        // Display menu items
+        function displayMenuItems() {
+            const container = document.getElementById('menu-items');
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            
+            const filteredItems = menuData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
+                                    item.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = item.category === currentCategory;
+                const matchesVegetarian = !filters.vegetarian || item.isVegetarian;
+                const matchesVegan = !filters.vegan || item.isVegan;
+                
+                return matchesSearch && matchesCategory && matchesVegetarian && matchesVegan;
+            });
+
+            container.innerHTML = filteredItems.map(item => `
+                <div class="menu-item">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">
+                                ${item.name}
+                                ${item.isVegetarian ? '🌱' : ''}
+                                ${item.isVegan ? '🌿' : ''}
+                                ${item.isSpicy ? '🌶️' : ''}
+                            </div>
+                            <div class="item-description">${item.description}</div>
+                        </div>
+                        <button class="favorite-btn ${favorites.includes(item.id) ? 'active' : ''}" 
+                                onclick="toggleFavorite('${item.id}')">
+                            ${favorites.includes(item.id) ? '❤️' : '🤍'}
+                        </button>
+                    </div>
+                    
+                    <div class="item-meta">
+                        <div class="rating">
+                            <span class="star">⭐</span>
+                            <span>${item.rating}</span>
+                        </div>
+                        <div>
+                            ⏰ ${item.prepTime} min
+                        </div>
+                    </div>
+                    
+                    <div class="ingredients">
+                        ${item.ingredients.slice(0, 3).map(ingredient => 
+                            `<span class="ingredient-tag">${ingredient}</span>`
+                        ).join('')}
+                        ${item.ingredients.length > 3 ? 
+                            `<span class="ingredient-tag">+${item.ingredients.length - 3} more</span>` : ''}
+                    </div>
+                    
+                    ${item.allergens && item.allergens.length > 0 ? 
+                        `<div class="allergens"><strong>Allergens:</strong> ${item.allergens.join(', ')}</div>` : ''}
+                    
+                    <div class="item-footer">
+                        <div class="price">$${item.price.toFixed(2)}</div>
+                        <button class="add-to-cart" onclick="addToCart('${item.id}')">
+                            ➕ Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Category switching
+        function showCategory(category) {
+            currentCategory = category;
+            
+            // Update tab styling
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.closest('.category-tab').classList.add('active');
+            
+            displayMenuItems();
+        }
+
+        // Filter functionality
+        function toggleFilter(filterType) {
+            filters[filterType] = !filters[filterType];
+            const button = document.getElementById(filterType + '-filter');
+            button.classList.toggle('active');
+            displayMenuItems();
+        }
+
+        function filterItems() {
+            displayMenuItems();
+        }
+
+        // Cart functionality
+        function addToCart(itemId) {
+            const item = menuData.find(i => i.id === itemId);
+            const existingItem = cart.find(i => i.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            updateCartDisplay();
+        }
+
+        function removeFromCart(itemId) {
+            const existingItem = cart.find(i => i.id === itemId);
+            
+            if (existingItem && existingItem.quantity > 1) {
+                existingItem.quantity -= 1;
+            } else {
+                cart = cart.filter(i => i.id !== itemId);
+            }
+            
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Update cart count
+            document.getElementById('cart-count').textContent = totalItems;
+            const badge = document.getElementById('cart-badge');
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+            
+            // Update cart content
+            const cartContent = document.getElementById('cart-content');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="cart-empty">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🛒</div>
+                        <p>Your cart is empty</p>
+                        <p style="font-size: 0.875rem;">Add some delicious items!</p>
+                    </div>
+                `;
+            } else {
+                cartContent.innerHTML = `
+                    ${cart.map(item => `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <p>$${item.price.toFixed(2)} each</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="removeFromCart('${item.id}')">−</button>
+                                <span style="min-width: 24px; text-align: center;">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="addToCart('${item.id}')">+</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    
+                    <div class="cart-total">
+                        <div class="total-row">
+                            <span style="font-weight: bold;">Total:</span>
+                            <span class="total-price">$${totalPrice.toFixed(2)}</span>
+                        </div>
+                        <button class="checkout-btn">Proceed to Checkout</button>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleFavorite(itemId) {
+            if (favorites.includes(itemId)) {
+                favorites = favorites.filter(id => id !== itemId);
+            } else {
+                favorites.push(itemId);
+            }
+            displayMenuItems();
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Mobile responsiveness for cart
+        if (window.innerWidth <= 1024) {
+            document.getElementById('cart-sidebar').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
