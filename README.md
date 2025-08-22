@@ -57,16 +57,6 @@ CODSOFT/
 │ └── index.html
 └── README.md
 
-
----
-
-## Code Links  
-
-- **Task 1** → https://yourusername.github.io/CODSOFT/Task1/  
-- **Task 2** → https://yourusername.github.io/CODSOFT/Task2/  
-- **Task 3** → https://yourusername.github.io/CODSOFT/Task3/  
-- **Task 4** → https://yourusername.github.io/CODSOFT/Task4/  
-
 ---
 
 ##  Connect With Me
